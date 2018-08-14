@@ -113,6 +113,14 @@ Here are several various examples:
 
             # Determine action to perform
             if action == 'play':
+                self.machine.log.info("Playing sound '{}'' with context {}".format(sound_name, context))
+                self.machine.log.info(" - context settings are: {}".format(s))
+                self.machine.log.info(" - sound {} config is: {}".format(sound, sound.config))
+                for handler in ["events_when_played", "events_when_stopped"]:
+                    if s.get(handler) and s[handler][0] == "use_sound_setting" and sound.config.get(handler):
+                        s[handler] = sound.config[handler]
+                        self.machine.log.info("Fixed 'use_sound_setting', playing with new settings: {}".format(s))
+
                 track.play_sound(sound, context, s)
 
             elif action == 'stop':
