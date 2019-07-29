@@ -11,6 +11,12 @@ displays:
     width: 300
 
 slides:
+  slide_condition_foo:
+    - type: text
+      text: Conditional Slide (FOO)
+  slide_condition_bar:
+    - type: text
+      text: Conditional Slide (BAR)
   machine_slide_1:
     - type: text
       text: TEST SLIDE PLAYER - SLIDE 1
@@ -240,3 +246,9 @@ slide_player:
             repeat: yes
   remove_slide_with_animations:
     my_slide: remove
+  show_conditional_slide:
+    slide_condition_foo{var=="foo"}:
+      action: play
+    slide_condition_bar{var=="bar"}:
+      action: play
+
