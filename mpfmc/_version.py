@@ -1,13 +1,15 @@
-__version__ = '0.56.0-dev.2'
-__short_version__ = '0.56'
+import os
+
+__version__ = '0.57.0.dev12'
+__short_version__ = '0.57'
 __bcp_version__ = '1.1'
-__config_version__ = '5'
-__mpf_version_required__ = '0.56.0-dev.1'
+__config_version__ = '6'
+__mpf_version_required__ = '0.57.0.dev32'  # ALSO UPDATE in pyproject.toml
 
 # pylint: disable-msg=invalid-name
-version = "MPF-MC v{}".format(__version__)
+version = f"MPF-MC v{__version__}"
 '''A friendly version string for this build of MPF.'''
 
 # pylint: disable-msg=invalid-name
-extended_version = "MPF-MC v{} (config_version={}, BCP v{}, Requires MPF v{})".format(
-    __version__, __config_version__, __bcp_version__, __mpf_version_required__)
+extended_version = f"MPF-MC v{__version__} (config_version={__config_version__}, BCP v{__bcp_version__}, \
+                     Requires MPF API compatibility v{ __mpf_version_required__} or newer)"

@@ -35,7 +35,7 @@ class SoundSystem:
 
     # pylint: disable=invalid-name, too-many-branches
     def __init__(self, mc):
-        """Initialise sound system."""
+        """initialize sound system."""
         self.mc = mc
         self.log = logging.getLogger('SoundSystem')
         self._initialized = False
@@ -80,9 +80,6 @@ class SoundSystem:
         if 'channels' not in self.config:
             self.config['channels'] = DEFAULT_AUDIO_CHANNELS
 
-        if 'master_volume' not in self.config:
-            self.config['master_volume'] = DEFAULT_MASTER_VOLUME
-
         # Initialize audio interface library (get audio output)
         try:
             self.audio_interface = AudioInterface(
@@ -107,7 +104,7 @@ class SoundSystem:
         # Set initial master volume level to off
         self.master_volume = 0.0
         if "master_volume" in self.config:
-            self.log.warning("master_volume in sound_system is deprecated and will be removed in the future.")
+            raise ValueError("master_volume in sound_system is deprecated. Use the 'master_volume' machine_var instead.")
 
         # Establish machine tick function callback (will process internal audio events)
         self.clock_event = Clock.schedule_interval(self.tick, 0)

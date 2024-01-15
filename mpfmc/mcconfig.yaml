@@ -1,4 +1,4 @@
-#config_version=5
+#config_version=6
 
 mpf-mc:
     config_players:
@@ -43,6 +43,7 @@ mpf-mc:
         - gain
         - gamma
         - glow
+        - linear_gradient
         - monochrome
         - reduce
 
@@ -63,7 +64,7 @@ mpf-mc:
         animations: animations
         movies: movies
         modes: modes
-        scriptlets: scriptlets
+        custom_code: custom_code
 
     allow_invalid_config_sections: true
     fps: 30
