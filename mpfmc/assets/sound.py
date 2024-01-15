@@ -42,6 +42,7 @@ class SoundPool(AssetPool):
         self._simultaneous_limit = None
         self._stealing_method = SoundStealingMethod.oldest
         self._key = None
+        self._ducking = None
         self.log = logging.getLogger('SoundPool')
 
         config.setdefault('track', None)
@@ -70,6 +71,14 @@ class SoundPool(AssetPool):
 
         self._track = config['track']
         self._key = config['key']
+
+        if 'ducking' in self.config:
+            try:
+                self._ducking = DuckingSettings(self.machine, self.config['ducking'])
+            except AudioException:
+                raise AudioException("Error in ducking settings: {}. "
+                                     "Could not create sound '{}' asset"
+                                     .format(sys.exc_info()[1], self.name))
 
         if 'simultaneous_limit' in self.config and self.config['simultaneous_limit'] is not None:
             self._simultaneous_limit = int(self.config['simultaneous_limit'])
@@ -121,6 +130,17 @@ class SoundPool(AssetPool):
     def sound(self):
         """The currently selected Sound object from the pool"""
         return self.asset
+
+    @property
+    def has_ducking(self):
+        """Sound pools don't currently support ducking."""
+        return self._ducking is not None
+
+    def set_ducking(self, ducking_settings=None):
+        if not ducking_settings:
+            self._ducking = None
+            return
+        self._ducking = DuckingSettings(self.machine, ducking_settings)
 
     @property
     def simultaneous_limit(self):
@@ -738,6 +758,7 @@ class SoundInstance:
             self._context = None
 
         self._status = SoundInstanceStatus.pending
+        self._ducking = None
         self._pan = 0
         self._played = False
         self._loop_count = 0
@@ -750,8 +771,11 @@ class SoundInstance:
         # SoundAsset object in the pool).
         if isinstance(sound, SoundAsset):
             self._sound = sound
+            self._ducking = sound.ducking
         elif isinstance(sound, SoundPool):
             self._sound = sound.sound
+            # Individual sound ducking has priority over pool ducking
+            self._ducking = sound.sound.ducking or sound.ducking
 
         # Simultaneous limit comes from the SoundAsset or SoundPool class and may not
         # be overridden
@@ -1053,12 +1077,12 @@ class SoundInstance:
     @property
     def ducking(self):
         """A DuckingSettings object containing the ducking settings for this sound (optional)"""
-        return self._sound.ducking
+        return self._ducking
 
     @property
     def has_ducking(self):
         """Return whether or not this sound has ducking"""
-        return self._sound.ducking is not None
+        return self._ducking is not None
 
     @property
     def key(self):
