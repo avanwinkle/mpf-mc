@@ -132,8 +132,12 @@ class SoundPool(AssetPool):
         return self.asset
 
     @property
+    def ducking(self):
+        """A DuckingSettings object containing the ducking settings for this sound (optional)"""
+        return self._ducking
+
+    @property
     def has_ducking(self):
-        """Sound pools don't currently support ducking."""
         return self._ducking is not None
 
     def set_ducking(self, ducking_settings=None):
@@ -774,8 +778,10 @@ class SoundInstance:
             self._ducking = sound.ducking
         elif isinstance(sound, SoundPool):
             self._sound = sound.sound
-            # Individual sound ducking has priority over pool ducking
-            self._ducking = sound.sound.ducking or sound.ducking
+            # Individual sound ducking has priority over pool ducking.
+            # Accessing a pool.sound property rotates it, so ref
+            # the asset already stored to self._sound
+            self._ducking = self._sound.ducking or sound.ducking
 
         # Simultaneous limit comes from the SoundAsset or SoundPool class and may not
         # be overridden
