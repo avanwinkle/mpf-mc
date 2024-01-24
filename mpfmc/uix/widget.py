@@ -558,10 +558,12 @@ class Widget(KivyWidget):
             if settings['relative']:
                 animation = RelativeAnimation(duration=settings['duration'],
                                               transition=settings['easing'],
+                                              step=settings['step'],
                                               **prop_dict)
             else:
                 animation = Animation(duration=settings['duration'],
                                       transition=settings['easing'],
+                                      step=settings['step'],
                                       **prop_dict)
 
             # Determine if this animation should be performed in sequence or in parallel
