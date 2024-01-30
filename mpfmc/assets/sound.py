@@ -780,8 +780,9 @@ class SoundInstance:
             self._sound = sound.sound
             # Individual sound ducking has priority over pool ducking.
             # Accessing a pool.sound property rotates it, so ref
-            # the asset already stored to self._sound
-            self._ducking = self._sound.ducking or sound.ducking
+            # the asset already stored to self._sound. If the pool is
+            # conditional, the sound may be None so use getattr for safety.
+            self._ducking = getattr(self._sound, "ducking", None) or sound.ducking
 
         # Simultaneous limit comes from the SoundAsset or SoundPool class and may not
         # be overridden
